@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { DiscordModule } from './discord/discord.module';
 import { LinksModule } from './links/links.module';
 import { GuildsModule } from './guilds/guilds.module';
+import { IndexerModule } from './indexer/indexer.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { GuildsModule } from './guilds/guilds.module';
     }),
     DiscordModule,
     LinksModule,
-    GuildsModule
+    GuildsModule,
+    IndexerModule
   ],
   controllers: [AppController],
   providers: [AppService],
