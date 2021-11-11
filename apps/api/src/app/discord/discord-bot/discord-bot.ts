@@ -93,7 +93,7 @@ export class DiscordBot {
 
     const guild = await this.client.guilds.fetch(guildId);
 
-    if (await this.hasAccessToChannel(guild, channelId)) {
+    if (await this.hasAccessToChannel(guild, channelId) === false) {
       this.logger.error(`Trying to read messages for channel that bot has no access to. GuildId: ${guildId} (${guild.name}), Channel ${channelId}`);
       throw new NoAccessToChannelError(guild, channelId);
     }
