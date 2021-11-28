@@ -1,5 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { Client, DiscordAPIError, Guild, Intents, Message } from 'discord.js';
+import { IndexSchedulerService } from '../../index-scheduler/index-scheduler.service';
 import { LinksService } from '../../links/links.service';
 import IChannel from '../channel';
 import BotNotInGuildError from './errors/bot-not-in-guild';
@@ -13,7 +14,7 @@ export class DiscordBot {
   private client: Client;
   private logger = new Logger("DiscordBot");
 
-  constructor(private linksService: LinksService) {
+  constructor(private linksService: LinksService, private indexShedulerService: IndexSchedulerService) {
     this.client = new Client({
       intents: this.getAllUnpriviligedIntents(),
       partials: ['CHANNEL', 'MESSAGE', 'REACTION']
@@ -135,8 +136,9 @@ export class DiscordBot {
       await message.channel.send(link);
     }
     if (message.content.startsWith("$>break this fuckin shit")) {
-      const searchedMessage = await message.channel.messages.fetch({ after: message.id, limit: 1 });
-      message.channel.send(`|x| -> ${Array.from(searchedMessage.values())[0]}`);
+      //const searchedMessage = await message.channel.messages.fetch({ after: message.id, limit: 1 });
+      message.channel.send(`<@${message.author.id}> nawet się nie łódź, że nie będzie błędu.`);
+      this.indexShedulerService.scheduleScanJob(message.guildId, message.channelId);
     }
   }
 

@@ -44,6 +44,9 @@ export default class IndexEntry {
   content: string;
 
   @Column()
+  attachmentName: string;
+
+  @Column()
   attachmentURL: string;
 
   @Column()
