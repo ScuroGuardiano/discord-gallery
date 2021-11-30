@@ -45,11 +45,31 @@ export class IndexJobExecutorService {
 
   @Timeout(1000)
   async resumeJobsInProgress() {
-    this.logger.log("Resume Jobs in progress are not implemented yet");
+    const jobsInProgress = await this.connection.manager.find(JobInProgress);
+    if (jobsInProgress.length > 0) {
+      this.logger.log(`Found ${jobsInProgress.length} job that was executing before app exited. Resuming them...`);
+      jobsInProgress.forEach(job => this.resumeJob(job));
+    }
+  }
+
+  async resumeJob(job: JobInProgress): Promise<JobInExecution> {
+    const scanPromise = this.indexMessageScanner.scan(job);
+    const jobInExecution: JobInExecution = {
+      job: job,
+      promise: scanPromise
+    }
+    this.jobsInExecution.push(jobInExecution);
+
+    scanPromise
+    .then(() => this.handleJobFinish(jobInExecution))
+    .catch(error => this.handleJobFinish(jobInExecution, error));
+
+    return jobInExecution;
   }
 
   async executeJob(job: QueuedJob): Promise<JobInExecution> {
     const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
@@ -106,6 +126,7 @@ export class IndexJobExecutorService {
     }
 
     const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {

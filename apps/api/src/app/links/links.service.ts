@@ -29,6 +29,16 @@ export class LinksService {
     return linkURL;
   }
 
+  /**
+   * Will return Link entity instance based on hashed link id.
+   *
+   * Throws:
+   * * LinkNotFoundError
+   * * LinkExpiredError
+   *
+   * @param linkId
+   * @returns
+   */
   public async GetLinkByLinkId(linkId: string) {
     const linkIdHash = this.hashLinkId(linkId);
 
@@ -37,7 +47,7 @@ export class LinksService {
       throw new LinkNotFoundError();
     }
 
-    if (Date.now() > link.validBefore.getTime()) {
+    if (Date.now() < link.validBefore.getTime()) {
       throw new LinkExpiredError();
     }
 
