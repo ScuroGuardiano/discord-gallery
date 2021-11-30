@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  linkExpireTime: 86400,
+  linkExpireTime: 24 * 60 * 60 * 1000,
   concurrentScanJobs: 1,
-  rescanCooldown: 86400 * 3 // How often someone can run message scan again for a given guild+channel pair.
+  rescanCooldown: 3 * 24 * 60 * 60 * 1000 // How often someone can run message scan again for a given guild+channel pair.
 };
