@@ -78,7 +78,7 @@ export class IndexSchedulerService {
 
     if (finishedJob) {
       const timeDiff = Date.now() - finishedJob.finishTime.getTime();
-      this.logger.warn(`Tried to enqueue job that was finished in less than rescan cooldown: ${environment.rescanCooldown} seconds. ${formatGuildChannelIds(guildId, channelId)}`);
+      this.logger.warn(`Tried to enqueue job that was finished in less than rescan cooldown: ${environment.rescanCooldown / 1000} seconds. ${formatGuildChannelIds(guildId, channelId)}`);
       if (timeDiff < environment.rescanCooldown) {
         throw new RescanOnCooldownError(guildId, channelId);
       }
