@@ -15,7 +15,7 @@ export class LinksService {
 
   private host = process.env.DISCORD_GALLERY_HOST || ''
 
-  public async createLink(guildId: string, channelId?: string): Promise<string> {
+  public async createLink(guildId: string, channelId: string): Promise<string> {
     const linkId = this.generateRandomLinkId();
     const link = new Link();
     link.guildId = guildId;
@@ -47,7 +47,7 @@ export class LinksService {
       throw new LinkNotFoundError();
     }
 
-    if (Date.now() < link.validBefore.getTime()) {
+    if (Date.now() > link.validBefore.getTime()) {
       throw new LinkExpiredError();
     }
 

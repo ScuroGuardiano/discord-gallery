@@ -119,7 +119,8 @@ export class IndexSchedulerService {
 
     if (finishedJob) {
       return {
-        status: JOB_STATUSES.FINISHED
+        status: JOB_STATUSES.FINISHED,
+        finishTime: finishedJob.finishTime
       }
     }
 
@@ -164,5 +165,14 @@ export class IndexSchedulerService {
     }
 
     return -1337;
+  }
+
+  public async getLastFinishedJobTime(guildId: string, channelId: string): Promise<Date> {
+    const finishedJob = await this.connection.manager.findOne(FinishedJob, {
+      where: { guildId, channelId },
+      order: { finishTime: 'DESC' }
+    });
+
+    return finishedJob?.finishTime ?? null;
   }
 }

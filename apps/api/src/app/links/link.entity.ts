@@ -18,10 +18,8 @@ export default class Link {
   /**
    * Discord Chanell ID to which link belongs.
    */
-  @Column({
-    nullable: true
-  })
-  channelId?: string;
+  @Column()
+  channelId: string;
 
   /**
    * I don't think generating perma access to Discord Server image history would be a good idea.

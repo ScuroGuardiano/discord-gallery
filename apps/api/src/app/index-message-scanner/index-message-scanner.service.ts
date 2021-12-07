@@ -4,6 +4,7 @@ import { DiscordService } from '../discord/discord.service';
 import { IndexManagerService } from '../index-manager/index-manager.service';
 import JobInProgress from '../index-common/entities/job-in-progress.entity';
 import { Message } from 'discord.js';
+import formatGuildChannelIds from '../utils/format-guild-channel-ids';
 
 @Injectable()
 export class IndexMessageScannerService {
@@ -18,8 +19,11 @@ export class IndexMessageScannerService {
 
     if (!job.startTime) {
       logger.log(`Starting scanning job...`);
+      logger.log(`Wiping index...`);
+      await this.indexManager.wipeIndexForGuildIdChannelId(job.guildId, job.channelId);
       job.start();
       await this.connection.manager.save(job);
+      logger.log(`Job has started, ${formatGuildChannelIds(job.guildId, job.channelId)}`);
     }
     else {
       logger.log(`Resuming scanning job started at: ${job.startTime.toLocaleString()}, already scanned: ${job.scannedMessages}.`);

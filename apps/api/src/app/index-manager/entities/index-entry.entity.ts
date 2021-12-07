@@ -1,3 +1,4 @@
+import { Message, TextChannel } from "discord.js";
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
 // TODO: Make you homework and learn how indices work.
@@ -55,12 +56,30 @@ export default class IndexEntry {
   /**
    * Name on guild
    */
-  @Column()
-  authorNickname: string;
+  @Column({ nullable: true })
+  authorNickname?: string;
 
   /**
    * Name on Discord
    */
   @Column()
   authorUsername: string;
+
+  public static fromMessage(message: Message): IndexEntry {
+    const indexEntry = new IndexEntry();
+    indexEntry.messageId = message.id;
+    indexEntry.guildId = message.guildId;
+    indexEntry.guildName = message.guild.name;
+    indexEntry.channelId = message.channelId;
+    indexEntry.channelName = (<TextChannel>message.channel).name;
+    indexEntry.authorId = message.author.id;
+    indexEntry.authorNickname = message.member?.nickname;
+    indexEntry.authorUsername = message.author.tag;
+    indexEntry.content = message.content;
+    indexEntry.createdTimestamp = message.createdAt;
+    indexEntry.editedTimestamp = message.editedAt;
+    indexEntry.attachmentURL = message.attachments.first().url;
+    indexEntry.attachmentName = message.attachments.first().name;
+    return indexEntry;
+  }
 }

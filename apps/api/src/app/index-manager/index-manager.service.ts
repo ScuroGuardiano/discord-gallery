@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Message, TextChannel } from 'discord.js';
+import { Message } from 'discord.js';
 import { Connection } from 'typeorm';
 import IndexEntry from './entities/index-entry.entity';
 
@@ -13,24 +13,48 @@ export class IndexManagerService {
     if (messages.length === 0) {
       return;
     }
-    const indexEntries = messages.map(message => {
-      const indexEntry = new IndexEntry();
-      indexEntry.messageId = message.id;
-      indexEntry.guildId = message.guildId;
-      indexEntry.guildName = message.guild.name;
-      indexEntry.channelId = message.channelId;
-      indexEntry.channelName = (<TextChannel>message.channel).name;
-      indexEntry.authorId = message.author.id;
-      indexEntry.authorNickname = (message.member?.nickname) ?? "FUCK YOU";
-      indexEntry.authorUsername = message.author.tag;
-      indexEntry.content = message.content;
-      indexEntry.createdTimestamp = message.createdAt;
-      indexEntry.editedTimestamp = message.editedAt;
-      indexEntry.attachmentURL = message.attachments.first().url;
-      indexEntry.attachmentName = message.attachments.first().name;
-      return indexEntry;
-    });
+    const indexEntries = messages.map(message => IndexEntry.fromMessage(message));
 
     await this.connection.manager.save(indexEntries);
+  }
+
+  public async countIndexEntries(guildId: string, channelId: string): Promise<number> {
+    return this.connection.manager.count(IndexEntry, {
+      where: {
+        guildId, channelId
+      }
+    });
+  }
+
+  public async fetchEntries(guildId: string, channelId: string, limit: number, offset = 0): Promise<IndexEntry[]> {
+    return this.connection.manager.find(IndexEntry, {
+      where: { guildId, channelId, deleted: false },
+      order: { createdTimestamp: 'DESC' },
+      take: limit,
+      skip: offset
+    });
+  }
+
+  public async indexMessage(message: Message) {
+    const indexEntry = IndexEntry.fromMessage(message);
+    await this.connection.manager.save(indexEntry);
+  }
+
+  public async deleteEntry(message: Message) {
+    await this.connection.manager.delete(IndexEntry, {
+      messageId: message.id
+    });
+  }
+
+  public async updateEntry(oldMessage: Message, newMessage: Message) {
+    const indexEntry = IndexEntry.fromMessage(newMessage);
+    indexEntry.messageId = oldMessage.id; // For sanity
+    await this.connection.manager.save(indexEntry);
+  }
+
+  public async wipeIndexForGuildIdChannelId(guildId: string, channelId: string) {
+    await this.connection.manager.delete(IndexEntry, {
+      guildId, channelId
+    });
   }
 }

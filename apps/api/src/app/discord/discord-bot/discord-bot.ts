@@ -1,5 +1,6 @@
 import { Logger } from '@nestjs/common';
-import { Client, DiscordAPIError, Guild, Intents, Message } from 'discord.js';
+import { Channel, Client, DiscordAPIError, Guild, Intents, Message } from 'discord.js';
+import EventEmitter = require('events');
 import { IndexSchedulerService } from '../../index-scheduler/index-scheduler.service';
 import { LinksService } from '../../links/links.service';
 import IChannel from '../channel';
@@ -10,11 +11,12 @@ import NoAccessToChannelError from './errors/no-access-to-channel';
 /**
  * Discord bot providing communication with Discord and reacting to discord users' commands.
  */
-export class DiscordBot {
+export class DiscordBot extends EventEmitter {
   private client: Client;
   private logger = new Logger("DiscordBot");
 
   constructor(private linksService: LinksService, private indexShedulerService: IndexSchedulerService) {
+    super();
     this.client = new Client({
       intents: this.getAllUnpriviligedIntents(),
       partials: ['CHANNEL', 'MESSAGE', 'REACTION']
@@ -45,13 +47,52 @@ export class DiscordBot {
       this.logger.error(err);
     });
 
+    this.bindMessageEventListeners();
+  }
+
+  public async getGuildById(guildId: string): Promise<Guild> {
+    if (await this.isInGuild(guildId)) {
+      return this.client.guilds.fetch(guildId);
+    }
+    return null;
+  }
+
+  public async getChannelById(guild: Guild, channelId: string): Promise<Channel> {
+    if (await this.hasAccessToChannel(guild, channelId)) {
+      return guild.channels.fetch(channelId);
+    }
+    return null;
+  }
+
+  private bindMessageEventListeners() {
     this.client.on('messageCreate', msg => {
       this.logger.debug(`MessageCreate: <${msg.author.tag}> ${msg.content}`);
       if (msg.author.id === this.client.user.id) {
         return;
       }
       this.handleMessage(msg);
+
+      this.emit('messageCreate', msg);
     });
+
+    this.client.on('messageDelete', msg => {
+      this.logger.debug(`MessageDelete: (${msg.id}) <${msg?.author?.tag}> ${msg?.content}`);
+
+      this.emit('messageDelete', msg);
+    });
+
+    this.client.on('messageUpdate', (oldMsg, newMsg) => {
+      this.logger.debug(`MessageUpdate: <${newMsg.author.tag}> ${oldMsg.content}\nchanged to\n${newMsg.content}`);
+
+      this.emit('messageUpdate', oldMsg, newMsg);
+    });
+  }
+
+  public on(event: 'messageCreate', listener: (message: Message) => void): this;
+  public on(event: 'messageDelete', listener: (message: Message) => void): this;
+  public on(event: 'messageUpdate', listener: (oldMessage: Message, newMessage: Message) => void): this;
+  public on(event, listener): this {
+    return super.on(event, listener);
   }
 
   public async hasAccessToChannel(guild: Guild, channelId: string): Promise<boolean> {
@@ -135,9 +176,9 @@ export class DiscordBot {
       const link = await this.linksService.createLink(message.guildId, message.channelId);
       await message.channel.send(link);
     }
-    if (message.content.startsWith("$>break this fuckin shit")) {
+    if (message.content.startsWith("$>idx") && process.env.NODE_ENV === 'DEVELOPMENT') {
       //const searchedMessage = await message.channel.messages.fetch({ after: message.id, limit: 1 });
-      message.channel.send(`<@${message.author.id}> nawet się nie łódź, że nie będzie błędu.`);
+      message.channel.send(`<@${message.author.id}> starting full index of this channel...`);
       this.indexShedulerService.scheduleScanJob(message.guildId, message.channelId);
     }
   }

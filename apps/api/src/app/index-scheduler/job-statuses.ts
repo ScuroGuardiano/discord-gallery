@@ -9,4 +9,5 @@ export interface IJobStatus {
   status: JOB_STATUSES;
   scannedMessages?: number;
   positionInQueue?: number;
+  finishTime?: Date;
 }
