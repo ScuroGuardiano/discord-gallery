@@ -1,11 +1,26 @@
 <main>
   <h1>
+    <span class="success">Success</span>{{' '}}
+    <span class="warning">Warning</span>{{' '}}
+    <span class="error">Error</span>{{' '}}
+  </h1>
+
+  <h1>
     Path: <span class="accent">{{ path }}</span>
   </h1>
+
+  <h3 *ngIf="loading">
+    Loading...
+  </h3>
+
   <h3 *ngIf="link">
     Guild: <span class="accent">{{ link!.guildName }}</span><br>
     Channel: <span class="accent">{{ link!.channelName }}</span><br>
     Images: <span class="accent">{{ link!.mediaAssetsCount }}</span><br>
     Last index at: <span class="accent">{{ link!.lastIndexedAt | date:'dd.MM.YYYY hh:mm:ss' }}</span>
+  </h3>
+
+  <h3 class="error" *ngIf="error">
+    {{ error }}
   </h3>
 </main>

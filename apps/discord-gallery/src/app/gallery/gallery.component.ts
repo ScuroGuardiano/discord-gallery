@@ -28,4 +28,8 @@ export class GalleryComponent implements OnInit {
       );
   }
 
+  public get loading() {
+    return !this.link && !this.error;
+  }
+
 }
