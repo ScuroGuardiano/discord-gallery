@@ -9,11 +9,12 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "@typescript-eslint/no-explicit-any": "off", // Fuck you ESLint
         "@angular-eslint/directive-selector": [
           "error",
           {
             "type": "attribute",
-            "prefix": "discordGallery",
+            "prefix": "dg",
             "style": "camelCase"
           }
         ],
@@ -21,7 +22,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "discord-gallery",
+            "prefix": "dg",
             "style": "kebab-case"
           }
         ]
