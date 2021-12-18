@@ -1,0 +1,6 @@
+<p *ngIf="guild">
+  <span class="guild">{{ guild  }}</span> &middot;{{' '}}
+  <span class="channel">{{ channel }}</span> &middot;{{' '}}
+  <span class="images">{{ images }} images</span> &middot;{{' '}}
+  <span *ngIf="lastIndexAt" class="last-index-at">{{ lastIndexAt | date:'dd.MM.YYYY hh:mm:ss' }}</span>
+</p>

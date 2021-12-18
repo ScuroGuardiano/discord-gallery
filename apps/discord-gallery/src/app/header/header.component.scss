@@ -1,0 +1,9 @@
+@import '../../theme.scss';
+
+header {
+  border-bottom: $main solid 1px;
+  h1 {
+    color: $accent1;
+    margin-left: .5rem;
+  }
+}
