@@ -1,3 +1,11 @@
-<h1>
-  Fucking path: {{ path }}
-</h1>
+<main>
+  <h1>
+    Path: <span class="accent">{{ path }}</span>
+  </h1>
+  <h3 *ngIf="link">
+    Guild: <span class="accent">{{ link!.guildName }}</span><br>
+    Channel: <span class="accent">{{ link!.channelName }}</span><br>
+    Images: <span class="accent">{{ link!.mediaAssetsCount }}</span><br>
+    Last index at: <span class="accent">{{ link!.lastIndexedAt | date:'dd.MM.YYYY hh:mm:ss' }}</span>
+  </h3>
+</main>
