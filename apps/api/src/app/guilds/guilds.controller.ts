@@ -5,9 +5,8 @@ import { IndexManagerService } from '../index-manager/index-manager.service';
 import { IndexSchedulerService } from '../index-scheduler/index-scheduler.service';
 import LinkErrorFilter from '../links/filters/link-error.filter';
 import { LinksService } from '../links/links.service';
-import IGalleryQuery from './gallery-query';
-import IGuildLinkInfo from './guild-link-info';
-import IMediaElementDTO, { indexEntryToMediaElementDTO } from './media-element-dto';
+import { IGalleryQuery, IGuildLinkInfo, IMediaElementDTO } from '@discord-gallery/api-interfaces';
+import { indexEntryToMediaElementDTO } from './media-element-dto';
 
 @Controller('guilds')
 export class GuildsController {
