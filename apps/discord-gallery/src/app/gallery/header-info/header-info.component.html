@@ -1,6 +1,6 @@
 <p *ngIf="guild">
-  <span class="guild">{{ guild  }}</span> &middot;{{' '}}
-  <span class="channel">{{ channel }}</span> &middot;{{' '}}
-  <span class="images">{{ images }} images</span> &middot;{{' '}}
-  <span *ngIf="lastIndexAt" class="last-index-at">{{ lastIndexAt | date:'dd.MM.YYYY hh:mm:ss' }}</span>
+  <span class="guild">{{ guild }}</span><br>
+  <span class="channel">#{{ channel }}</span><br>
+  <span class="images">{{ images }} images</span><br>
+  <span *ngIf="lastIndexAt" class="last-index-at">Last full scan: {{ lastIndexAt | date:'dd.MM.YYYY hh:mm' }}</span>
 </p>

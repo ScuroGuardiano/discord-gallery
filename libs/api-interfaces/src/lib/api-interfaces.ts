@@ -22,4 +22,6 @@ export interface IMediaElementDTO {
   authorId: string;
   authorNickname?: string;
   authorUsername: string;
+  width?: number;
+  height?: number;
 }

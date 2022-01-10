@@ -1,0 +1,3 @@
+<div *ngIf="_mediaElements">
+  <dg-media-row *ngFor="let row of rows" [mediaElements]="row.mediaElements" [height]="row.height" [gap]="gap"></dg-media-row>
+</div>

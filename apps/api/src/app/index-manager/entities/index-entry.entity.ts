@@ -50,6 +50,12 @@ export default class IndexEntry {
   @Column()
   attachmentURL: string;
 
+  @Column({ nullable: true })
+  imageWidth?: number;
+
+  @Column({ nullable: true })
+  imageHeight?: number;
+
   @Column()
   authorId: string;
 
@@ -80,6 +86,8 @@ export default class IndexEntry {
     indexEntry.editedTimestamp = message.editedAt;
     indexEntry.attachmentURL = message.attachments.first().url;
     indexEntry.attachmentName = message.attachments.first().name;
+    indexEntry.imageWidth = message.attachments.first().width ?? null;
+    indexEntry.imageHeight = message.attachments.first().height ?? null;
     return indexEntry;
   }
 }

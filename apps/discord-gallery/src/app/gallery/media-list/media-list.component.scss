@@ -1,0 +1,10 @@
+:host {
+  width: 100%;
+  display: block;
+}
+
+div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

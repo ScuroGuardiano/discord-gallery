@@ -1,9 +1,13 @@
 @import '../../theme.scss';
 
 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: $main solid 1px;
+  padding-left: .5rem;
+  padding-right: .5rem;
   h1 {
     color: $accent1;
-    margin-left: .5rem;
   }
 }

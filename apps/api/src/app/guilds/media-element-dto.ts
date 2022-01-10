@@ -11,6 +11,8 @@ export function indexEntryToMediaElementDTO(x: IndexEntry): IMediaElementDTO {
     url: x.attachmentURL,
     authorId: x.authorId,
     authorNickname: x.authorNickname,
-    authorUsername: x.authorUsername
+    authorUsername: x.authorUsername,
+    width: x.imageWidth,
+    height: x.imageHeight
   }
 }

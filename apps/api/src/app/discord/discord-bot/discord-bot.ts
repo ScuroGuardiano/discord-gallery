@@ -1,4 +1,5 @@
 import { Logger } from '@nestjs/common';
+import { environment } from '../../../environments/environment';
 import { Channel, Client, DiscordAPIError, Guild, Intents, Message } from 'discord.js';
 import EventEmitter = require('events');
 import { IndexSchedulerService } from '../../index-scheduler/index-scheduler.service';
@@ -176,7 +177,7 @@ export class DiscordBot extends EventEmitter {
       const link = await this.linksService.createLink(message.guildId, message.channelId);
       await message.channel.send(link);
     }
-    if (message.content.startsWith("$>idx") && process.env.NODE_ENV === 'DEVELOPMENT') {
+    if (message.content.startsWith("$>idx") && environment.production === false) {
       //const searchedMessage = await message.channel.messages.fetch({ after: message.id, limit: 1 });
       message.channel.send(`<@${message.author.id}> starting full index of this channel...`);
       this.indexShedulerService.scheduleScanJob(message.guildId, message.channelId);

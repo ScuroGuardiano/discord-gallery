@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IGuildLinkInfo } from '@discord-gallery/api-interfaces';
+import { IGalleryQuery, IGuildLinkInfo, IMediaElementDTO } from '@discord-gallery/api-interfaces';
 import { throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
@@ -12,6 +12,15 @@ export class LinkInfoService {
 
   public getLinkInfo(linkId: string) {
     return this.http.get<IGuildLinkInfo>(`/api/guilds/${linkId}`).pipe(
+      retry(3),
+      catchError(this.handleError)
+    );
+  }
+
+  public getImagesFromLink(linkId: string, { limit = 12, offset = 0 }: IGalleryQuery) {
+    return this.http.get<IMediaElementDTO[]>(
+      `/api/guilds/${linkId}/gallery?offset=${offset}&limit=${limit}`
+    ).pipe(
       retry(3),
       catchError(this.handleError)
     );

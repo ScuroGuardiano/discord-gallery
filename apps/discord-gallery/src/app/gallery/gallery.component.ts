@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IGuildLinkInfo } from '@discord-gallery/api-interfaces';
-import IHeaderEmbed from '../header/header-embed';
+import { IGuildLinkInfo, IMediaElementDTO } from '@discord-gallery/api-interfaces';
 import { HeaderService } from '../header/header.service';
 import { HeaderInfoComponent } from './header-info/header-info.component';
 import { LinkInfoService } from './link-info.service';
@@ -16,6 +15,7 @@ export class GalleryComponent implements OnInit {
   public path = '';
   public link?: IGuildLinkInfo;
   public error?: string;
+  public images: IMediaElementDTO[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -41,10 +41,15 @@ export class GalleryComponent implements OnInit {
         },
         error => this.error = error
       );
+    this.linkInfo.getImagesFromLink(this.path, { limit: 36, offset: 0 })
+        .subscribe(
+          images => this.images = images,
+          error => this.error = error
+        );
   }
 
   public get loading() {
-    return !this.link && !this.error;
+    return !this.link && !this.error && !this.images;
   }
 
 }

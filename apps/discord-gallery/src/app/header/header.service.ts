@@ -17,4 +17,9 @@ export class HeaderService {
     this._headerEmbed = { component, data };
     this.embedChanged.emit(this._headerEmbed);
   }
+
+  public clearHeaderEmbed() {
+    this._headerEmbed = undefined;
+    this.embedChanged.emit(undefined);
+  }
 }
