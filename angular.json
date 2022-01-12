@@ -72,7 +72,7 @@
       "projectType": "application",
       "root": "apps/discord-gallery",
       "sourceRoot": "apps/discord-gallery/src",
-      "prefix": "discord-gallery",
+      "prefix": "dg",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",

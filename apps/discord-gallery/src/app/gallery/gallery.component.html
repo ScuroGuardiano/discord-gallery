@@ -7,5 +7,15 @@
     {{ error }}
   </h3>
 
+  <div class="pagination">
+    <button [disabled]="!isPrevPage" (click)="prevPage()">&lt;&lt;Prev</button>
+    <button [disabled]="!isNextPage" (click)="nextPage()">Next&gt;&gt;</button>
+  </div>
+
   <dg-media-list [mediaElements]="images"></dg-media-list>
+
+  <div class="pagination">
+    <button [disabled]="!isPrevPage" (click)="prevPage()">&lt;&lt;Prev</button>
+    <button [disabled]="!isNextPage" (click)="nextPage()">Next&gt;&gt;</button>
+  </div>
 </main>

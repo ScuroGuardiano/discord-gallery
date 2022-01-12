@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'discord-gallery-root',
+  selector: 'dg-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

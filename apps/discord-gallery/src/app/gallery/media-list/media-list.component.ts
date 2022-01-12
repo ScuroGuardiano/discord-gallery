@@ -91,7 +91,6 @@ export class MediaListComponent implements OnInit {
     this.calculateRowHeightToFitWidthOfContainer(currentRow);
     this.rows.push(currentRow);
     this.addThumbnailsToRows();
-    console.log(this.width);
   }
 
   private calculateRowHeightToFitWidthOfContainer(row: IRow) {

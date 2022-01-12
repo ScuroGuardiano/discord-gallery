@@ -6,3 +6,27 @@ main {
 .accent {
   color: $accent2;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  gap: 1rem;
+
+  button {
+    border: none;
+    background: transparent;
+    color: $accent1;
+    font-size: 2rem;
+    cursor: pointer;
+    &:hover:not(:disabled) {
+      background: $accent1;
+      color: $main-background;
+    }
+    &:disabled {
+      cursor: not-allowed;
+      color: $inactive;
+    }
+  }
+}

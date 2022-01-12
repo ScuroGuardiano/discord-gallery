@@ -16,6 +16,9 @@ export class GalleryComponent implements OnInit {
   public link?: IGuildLinkInfo;
   public error?: string;
   public images: IMediaElementDTO[] = [];
+  public page = 1;
+
+  private readonly onPage = 24;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,15 +44,40 @@ export class GalleryComponent implements OnInit {
         },
         error => this.error = error
       );
-    this.linkInfo.getImagesFromLink(this.path, { limit: 36, offset: 0 })
-        .subscribe(
-          images => this.images = images,
-          error => this.error = error
-        );
+
+      this.loadImages();
   }
 
   public get loading() {
     return !this.link && !this.error && !this.images;
+  }
+
+  public get isNextPage() {
+    return (this.link?.mediaAssetsCount ?? 0) > (this.page * this.onPage);
+  }
+
+  public get isPrevPage() {
+    return this.page > 1;
+  }
+
+  public nextPage() {
+    this.page++;
+    window.scroll(0, 0);
+    this.loadImages();
+  }
+
+  public prevPage() {
+    this.page--;
+    window.scroll(0, 0);
+    this.loadImages();
+  }
+
+  private loadImages() {
+    this.linkInfo.getImagesFromLink(this.path, { limit: this.onPage, offset: this.onPage * (this.page - 1) })
+        .subscribe(
+          images => this.images = images,
+          error => this.error = error
+        );
   }
 
 }
